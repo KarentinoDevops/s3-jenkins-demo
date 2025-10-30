@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    BUCKET     = 'karentino-jenkins-demo-london'  // <- put YOUR exact bucket name
+    BUCKET     = 'karentino-jenkins-demo-london1'  // <-- change to yours
     AWS_REGION = 'eu-west-2'
     SITE_DIR   = 'dist'
   }
@@ -69,8 +69,8 @@ pipeline {
             if [ "$REGION" = "None" ] || [ -z "$REGION" ]; then REGION="${AWS_DEFAULT_REGION:-eu-west-2}"; fi
 
             VHOST_URL="http://$BUCKET.s3-website-$REGION.amazonaws.com"
-            echo "Website URL: $VHOST_URL"
             echo "$VHOST_URL" > website_url.txt
+            echo "Website URL: $VHOST_URL"
           '''
         }
       }
@@ -78,11 +78,7 @@ pipeline {
   }
 
   post {
-    success {
-      script { echo "Open: ${readFile('website_url.txt').trim()}" }
-    }
-    failure {
-      echo 'Something failed — check Console Output.'
-    }
+    success { script { echo "Open: ${readFile('website_url.txt').trim()}" } }
+    failure { echo 'Something failed — check Console Output.' }
   }
 }
